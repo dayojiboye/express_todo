@@ -4,9 +4,13 @@ const Schema = mongoose.Schema;
 
 const todoSchema = new Schema(
 	{
-		body: {
+		desc: {
 			type: String,
 			required: true,
+		},
+		isCompleted: {
+			type: Boolean,
+			required: false,
 		},
 	},
 	{ timestamps: true }

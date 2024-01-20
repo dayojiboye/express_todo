@@ -4,16 +4,16 @@ const getTodos = (req, res) => {
 	Todo.find()
 		.sort({ createdAt: -1 })
 		.then((data) => {
-			res.json(data);
+			res.json({ message: "Request processed successfully", data });
 		})
 		.catch((err) => console.log(err));
 };
 
 const addTodo = (req, res) => {
-	const todo = new Todo(req.body);
+	const todo = new Todo({ ...req.body, isCompleted: false });
 
-	if (!req.body.body) {
-		return res.status(400).json({ status: "error", error: "Todo can not be empty 🤨" });
+	if (!req.body.desc) {
+		return res.status(400).json({ status: "error", error: "Todo description cannot be empty 🤨" });
 	}
 
 	todo
@@ -25,14 +25,14 @@ const addTodo = (req, res) => {
 const updateTodo = (req, res) => {
 	const id = req.params.id;
 
-	if (!req.body.body) {
-		return res.status(400).json({ status: "error", error: "Todo can not be empty 🤨" });
+	if (!req.body.desc) {
+		return res.status(400).json({ status: "error", error: "Todo description cannot be empty 🤨" });
 	}
 
 	Todo.findById(id)
 		.then((data) => {
-			Todo.findByIdAndUpdate(id, { body: req.body.body })
-				.then((result) => res.json({ message: "Todo updated successfully 🎉", data: result }))
+			Todo.findByIdAndUpdate(id, { desc: req.body.desc, isCompleted: req.body.isCompleted })
+				.then((result) => res.json({ message: "Todo updated successfully 🎉", data: {} }))
 				.catch((err) => res.status(404).json({ status: "error", error: err }));
 		})
 		.catch((err) =>
